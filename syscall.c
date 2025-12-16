@@ -49,7 +49,7 @@ fetchstr(uint addr, char **pp)
 int
 argint(int n, int *ip)
 {
-  return fetchint((myproc()->tf->esp) + 4 + 4*n, ip);
+  return fetchint((mythread()->tf->esp) + 4 + 4*n, ip);
 }
 
 // Fetch the nth word-sized system call argument as a pointer
@@ -103,6 +103,10 @@ extern int sys_unlink(void);
 extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
+extern int sys_clone(void);
+extern int sys_join(void);
+extern int sys_texit(void);
+
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -126,20 +130,24 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
+[SYS_clone]   sys_clone,
+[SYS_join]    sys_join,
+[SYS_texit]   sys_texit,
 };
 
 void
 syscall(void)
 {
   int num;
-  struct proc *curproc = myproc();
+  struct thread *curthread = mythread();
 
-  num = curproc->tf->eax;
+  num = curthread->tf->eax;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
-    curproc->tf->eax = syscalls[num]();
+    curthread->tf->eax = syscalls[num]();
   } else {
     cprintf("%d %s: unknown sys call %d\n",
-            curproc->pid, curproc->name, num);
-    curproc->tf->eax = -1;
+            curthread->proc->pid, curthread->proc->name, num);
+    curthread->tf->eax = -1;
   }
 }
+
