@@ -181,13 +181,9 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
-	_threadtest\
-	_waittest\
-	_exittest\
-	_mytests\
-	_sbrkrace\
-	_Test1\
+	_basictest\
 	_countertest\
+	_sbrkracetest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
