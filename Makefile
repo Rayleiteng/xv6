@@ -187,6 +187,7 @@ UPROGS=\
 	_mytests\
 	_sbrkrace\
 	_Test1\
+	_countertest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

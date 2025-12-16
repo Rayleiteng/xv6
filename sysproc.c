@@ -105,6 +105,12 @@ sys_uptime(void)
 }
 
 int
+sys_gettid(void)
+{
+  return mythread()->tid;
+}
+
+int
 sys_clone(void)
 {
   int fcn;
